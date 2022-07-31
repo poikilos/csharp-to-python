@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
+from __future__ import print_function
 #########################################################################
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ def convert_cs_to_python_file(in_path, out_path):
     out = ""
     with open(in_path, 'r') as f_in:
         if not f_in:
-            print "ERROR: %s not found." % orig_in_path
+            print("ERROR: %s not found." % orig_in_path)
 
         for line in f_in:
             # FIRST THINGS FIRST ... for Python, we wanna fix tabs into
@@ -56,13 +56,12 @@ def convert_cs_to_python_file(in_path, out_path):
             # we want all our output to have spaces instead of tabs
             line = line.replace("\t", "    ")
 
-
             # We look for a command line arg to tell us if the input
             #   file might be .aspx (html)
             # If it is it's this special block.
             #   the default is below
             if (len(sys.argv) > 1):
-                if( sys.argv[1] == 'aspx' ):
+                if (sys.argv[1] == 'aspx'):
                     # this is the aspx -> html conversion
 
                     line = line.replace(" runat=\"server\"", "")
@@ -83,10 +82,22 @@ def convert_cs_to_python_file(in_path, out_path):
                         "<asp:TextBox ID",
                         "<input type=\"text\" id"
                     ).replace("></asp:TextBox>", " />")
-                    line = line.replace("<asp:Label ID", "<span id").replace("></asp:Label>", "></span>")
-                    line = line.replace("<asp:HiddenField ID", "<input type=\"hidden\" id").replace("></asp:HiddenField>", " />")
-                    line = line.replace("<asp:DropDownList ID", "<select id").replace("</asp:DropDownList>", "</select>")
-                    line = line.replace("<asp:ListItem", "<option").replace("</asp:ListItem>", "</option>")
+                    line = line.replace(
+                        "<asp:Label ID",
+                        "<span id"
+                    ).replace("></asp:Label>", "></span>")
+                    line = line.replace(
+                        "<asp:HiddenField ID",
+                        "<input type=\"hidden\" id"
+                    ).replace("></asp:HiddenField>", " />")
+                    line = line.replace(
+                        "<asp:DropDownList ID",
+                        "<select id"
+                    ).replace("</asp:DropDownList>", "</select>")
+                    line = line.replace(
+                        "<asp:ListItem",
+                        "<option"
+                    ).replace("</asp:ListItem>", "</option>")
 
                     # not all placeholders or literals convert to divs...
                     line = line.replace("<asp:PlaceHolder",
@@ -124,8 +135,10 @@ def convert_cs_to_python_file(in_path, out_path):
 
                 # braces are a tricky, but lets first just remove any
                 #   lines that only contain an open/close brace
-                if line.strip() == "{": continue
-                if line.strip() == "}": continue
+                if line.strip() == "{":
+                    continue
+                if line.strip() == "}":
+                    continue
 
                 # If the brace appears at the end of a line (like after
                 #   an "if")
@@ -141,8 +154,6 @@ def convert_cs_to_python_file(in_path, out_path):
                 # some comments are at the end of a line
                 line = line.replace("; //", " # ")
 
-
-
                 # Fixing semicolon line endings (not otherwise, may be
                 #   in a sql statement or something)
                 line = line.replace(";\n", "\n")
@@ -151,7 +162,6 @@ def convert_cs_to_python_file(in_path, out_path):
                 line = line.replace(") +\n", ") + \\\n")
                 # ^ lines that had an inline if still need the +
                 line = line.replace("+\n", "\\\n")
-
 
                 # Fixing function declarations...
                 line = line.replace("public ", "def ")
@@ -471,10 +481,10 @@ def convert_cs_to_python_file(in_path, out_path):
 
     with open(out_path, 'w') as f_out:
         if not f_out:
-            print "ERROR: unable to create convert.out."
+            print("ERROR: unable to create convert.out.")
 
         f_out.write(out)
-    print 'Wrote "%s"' % os.path.realpath(out_path)
+    print('Wrote "%s"' % os.path.realpath(out_path))
 
 
 def main():
