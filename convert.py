@@ -36,13 +36,19 @@ To try that:
 
 import re
 import sys
+import os
+MODULE_DIR = os.path.dirname(os.path.realpath(__file__))
 
-out = ""
 
 def convert_cs_to_python_file(in_path, out_path):
+    orig_in_path = in_path
+    if not os.path.isfile(in_path):
+        if in_path == "convert.in":
+            in_path = os.path.join(MODULE_DIR, in_path)
+    out = ""
     with open(in_path, 'r') as f_in:
         if not f_in:
-            print "ERROR: convert.in not found."
+            print "ERROR: %s not found." % orig_in_path
 
         for line in f_in:
             # FIRST THINGS FIRST ... for Python, we wanna fix tabs into
@@ -468,6 +474,7 @@ def convert_cs_to_python_file(in_path, out_path):
             print "ERROR: unable to create convert.out."
 
         f_out.write(out)
+    print 'Wrote "%s"' % os.path.realpath(out_path)
 
 
 def main():
